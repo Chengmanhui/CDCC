@@ -1,252 +1,340 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-HK">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>慢病共治計劃 登記小幫手</title>
+    <title>慢病共治計劃 (CDCC) 助手</title>
+    <!-- Tailwind CSS CDN -->
+    <script type='text/javascript' nonce='tm+u+3X1YgBA262Yj5AqzA==' src='https://aistudio.google.com/Bhl1plQVxefJDbw-FS3GeVTyulogDJLp4lrS-ms6KM7ZW_QbdHSi-mOH08uXzRHEN22GLQxqkg-hwDB9uKgb0hZvsWQWgE9pzji6YEjmJihfoL_qer8S1g6Xz3BABbfKM18SbKG8TAmHrRSA-dsINX94aEu2RTz0IfDQVt4SBncIBRRCg-JnzCwdKmjcpy_dyTY6Sig4J8ERS2g4Hj4VldujBYwCyCYA6JioL1a50UawdHXmu5he2LgJyAQuZsM5oIfrQGisGbX44KXZ4n9H7mW7riPeiFOz7BWHpoRdsNwF8h-HG-PMuurCLmREqkAQWCfeRQPVIwjurlfMgwYirMBMiO4Tuhj1xmr5gbl8Xs7bfElo8C8_IzG7gKX8snZl9ec3tZe30mc52re4iYfFNQkcXuRikUEOYmWl-Hp9TeDP8Gfx8G2M7Nz-9-m0cAnUhOH86PVXwP8B_kwM1E1EVAo-R3MOU4oJwSUpJcTTIsXQ4yLtnJ_V2sWEJ4nVTSSkwlUdEKaRGCdF6GlO8Q5xHyD4UKjoDsisWmblv9sl-IiT90G0GvYoacdehfQJ4khrszteZilYJ0KNzxEBzepAvxbdGC1E9khpyIoQJXBVzcPuCOY4uw'></script><script src="https://cdn.tailwindcss.com"></script>
+    <!-- React and ReactDOM CDN -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin=""></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin=""></script>
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js" crossorigin=""></script>
     <style>
-        :root {
-            --grey: #e0e0e0;
-            --light-green: #90EE90;
-            --red: #FF6B6B;
-            --yellow: #FFFFE0;
-            --dark-grey: #666;
-        }
-
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap');
         body {
-            font-family: "Microsoft JhengHei", "Heiti TC", sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f9f9f9;
-            font-size: 24px; /* 大字體設置 */
+            font-family: 'Inter', sans-serif;
         }
-
-        h1 {
-            color: #2c3e50;
-            text-align: center;
-            font-size: 42px;
-            border-bottom: 5px solid #2c3e50;
-            padding-bottom: 10px;
-        }
-
-        .intro-box {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 15px;
-            border: 2px solid #ddd;
-            margin-bottom: 30px;
-        }
-
-        .question-card {
-            background-color: #fff;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-
-        .question-text {
-            font-weight: bold;
-            margin-bottom: 15px;
-            display: block;
-        }
-
-        .button-group {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-        }
-
-        .btn {
-            padding: 15px 10px;
-            font-size: 22px;
-            border: 2px solid #ccc;
-            border-radius: 10px;
-            cursor: pointer;
-            background-color: var(--grey);
-            transition: all 0.3s;
-        }
-
-        /* 按鈕顏色狀態 */
-        .btn-none { background-color: var(--grey); color: #333; }
-        .btn-yes { background-color: var(--red) !important; color: white; border-color: #c0392b; }
-        .btn-no { background-color: var(--light-green) !important; color: #000; border-color: #27ae60; }
-        .btn-unknown { background-color: #ffeb3b !important; color: #000; border-color: #f1c40f; }
-
-        .confirm-section {
-            text-align: center;
-            margin: 40px 0;
-            padding: 30px;
-            border-top: 3px dashed #ccc;
-        }
-
         .participation-btn {
-            width: 100%;
-            padding: 25px;
-            font-size: 32px;
-            font-weight: bold;
-            margin: 10px 0;
-            border-radius: 20px;
-            border: none;
-            cursor: pointer;
+            transition: all 0.2s ease;
         }
-
-        .btn-join { background-color: var(--light-green); border: 4px solid #27ae60; }
-        .btn-not-join { background-color: var(--red); color: white; border: 4px solid #c0392b; }
-
-        .info-section {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 15px;
-            margin-top: 20px;
+        .participation-btn:active {
+            transform: scale(0.95);
         }
-
-        .info-title {
-            background-color: #2c3e50;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 10px;
-            display: inline-block;
-            margin-bottom: 15px;
+        /* Animation for content appearance */
+        .animate-in {
+            animation: fadeIn 0.5s ease-out forwards;
         }
-
-        .highlight-red { color: #e74c3c; font-weight: bold; }
-        .highlight-blue { color: #3498db; font-weight: bold; }
-
-        ul { padding-left: 25px; }
-        li { margin-bottom: 15px; }
-
-        .blood-pressure-box {
-            background-color: #f0f7ff;
-            border-left: 8px solid #3498db;
-            padding: 15px;
-            margin: 10px 0;
-            font-size: 22px;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
     </style>
 </head>
-<body>
+<body class="bg-slate-50 text-slate-900">
+    <div id="root"></div>
 
-    <h1>「慢病共治計劃」</h1>
+    <script type="text/babel">
+        const { useState } = React;
 
-    <div class="intro-box">
-        即係<strong>三高篩查</strong>，是政府資助計劃。<br>
-        俾年滿45歲，本身冇糖尿病，冇食緊糖尿藥，冇血壓高，冇食緊血壓藥，的街坊參加。
-    </div>
+        // Inlined SVG Icons to avoid UMD dependency issues
+        const IconWrapper = ({ children, size = 32, className = "" }) => (
+            <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                width={size} 
+                height={size} 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                className={`lucide ${className}`}
+            >
+                {children}
+            </svg>
+        );
 
-    <!-- 資格確認部分 -->
-    <div id="eligibility">
-        <div class="question-card">
-            <span class="question-text">1. 你本身有冇高血壓?</span>
-            <div class="button-group">
-                <button class="btn" onclick="select(this, 'yes')">有</button>
-                <button class="btn" onclick="select(this, 'no')">沒有</button>
-                <button class="btn" onclick="select(this, 'unknown')">不知道</button>
-                <button class="btn btn-none" onclick="select(this, 'default')">請選擇</button>
-            </div>
-        </div>
+        const HeartIcon = (props) => (
+            <IconWrapper {...props}>
+                <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.51 4.04 3 5.5l7 7Z" />
+            </IconWrapper>
+        );
 
-        <div class="question-card">
-            <span class="question-text">2. 你本身有冇糖尿病?</span>
-            <div class="button-group">
-                <button class="btn" onclick="select(this, 'yes')">有</button>
-                <button class="btn" onclick="select(this, 'no')">沒有</button>
-                <button class="btn" onclick="select(this, 'unknown')">不知道</button>
-                <button class="btn btn-none" onclick="select(this, 'default')">請選擇</button>
-            </div>
-        </div>
+        const StethoscopeIcon = (props) => (
+            <IconWrapper {...props}>
+                <path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3" />
+                <path d="M8 15v1a6 6 0 0 0 6 6h2a6 6 0 0 0 6-6v-4" />
+                <circle cx="20" cy="10" r="2" />
+            </IconWrapper>
+        );
 
-        <div class="question-card">
-            <span class="question-text">3. 你本身有冇食緊血壓藥?</span>
-            <div class="button-group">
-                <button class="btn" onclick="select(this, 'yes')">有</button>
-                <button class="btn" onclick="select(this, 'no')">沒有</button>
-                <button class="btn" onclick="select(this, 'unknown')">不知道</button>
-                <button class="btn btn-none" onclick="select(this, 'default')">請選擇</button>
-            </div>
-        </div>
+        const ClipboardCheckIcon = (props) => (
+            <IconWrapper {...props}>
+                <rect width="8" height="4" x="8" y="2" rx="1" ry="1" />
+                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+                <path d="m9 14 2 2 4-4" />
+            </IconWrapper>
+        );
 
-        <div class="question-card">
-            <span class="question-text">4. 你本身有冇食緊糖尿藥?</span>
-            <div class="button-group">
-                <button class="btn" onclick="select(this, 'yes')">有</button>
-                <button class="btn" onclick="select(this, 'no')">沒有</button>
-                <button class="btn" onclick="select(this, 'unknown')">不知道</button>
-                <button class="btn btn-none" onclick="select(this, 'default')">請選擇</button>
-            </div>
-        </div>
-    </div>
+        const CalendarIcon = (props) => (
+            <IconWrapper {...props}>
+                <path d="M8 2v4" />
+                <path d="M16 2v4" />
+                <rect width="18" height="18" x="3" y="4" rx="2" />
+                <path d="M3 10h18" />
+            </IconWrapper>
+        );
 
-    <!-- 參加確認按鈕 -->
-    <div class="confirm-section">
-        <div style="margin-bottom: 20px; font-weight: bold; font-size: 32px;">確認參加慢病共治計劃</div>
-        <button class="participation-btn btn-join">我要參加</button>
-        <button class="participation-btn btn-not-join">我不要參加</button>
-    </div>
+        const InfoIcon = (props) => (
+            <IconWrapper {...props}>
+                <circle cx="12" cy="12" r="10" />
+                <path d="M12 16v-4" />
+                <path d="M12 8h.01" />
+            </IconWrapper>
+        );
 
-    <!-- 流程說明 -->
-    <div class="info-section">
-        <div class="info-title">流程 今天</div>
-        <ul>
-            <li>你會揀選一位家庭醫生</li>
-            <li>護士會幫你登記入呢個計劃</li>
-            <li>會出一張預約醫生便條畀你</li>
-        </ul>
-    </div>
+        const AlertCircleIcon = (props) => (
+            <IconWrapper {...props}>
+                <circle cx="12" cy="12" r="10" />
+                <line x1="12" x2="12" y1="8" y2="12" />
+                <line x1="12" x2="12.01" y1="16" y2="16" />
+            </IconWrapper>
+        );
 
-    <div class="info-section">
-        <div class="info-title">嚟緊你要做嘅</div>
-        <ul>
-            <li><span class="highlight-red">打電話去預約見醫生</span>（ 如果遇到困難，可以搵返我地中心 ）</li>
-            <li>醫生地址同電話係第二頁</li>
-            <li>留意返 <span class="highlight-blue">預約便條 有效日期為1年半</span></li>
-            <li>見醫生當日<span class="highlight-red">唔使空肚</span></li>
-            <li>見醫生前的七日，自行喺屋企量血壓，建議每日2次。</li>
-        </ul>
-        
-        <div class="blood-pressure-box">
-            <strong>正常血壓：</strong><br>
-            上壓 90-120 mmHg<br>
-            下壓 60-80 mmHg<br>
-            脈搏: 60-100 bpm<br><br>
-            <small>※ 如果超出呢個範圍，建議休息15分鐘再量度。如果感到不適，或者血壓高好多(如上壓 170，或者低好多)，建議即刻去睇醫生</small>
-        </div>
-    </div>
+        const CheckCircle2Icon = (props) => (
+            <IconWrapper {...props}>
+                <circle cx="12" cy="12" r="10" />
+                <path d="m9 12 2 2 4-4" />
+            </IconWrapper>
+        );
 
-    <div class="info-section">
-        <div class="info-title">見完醫生之後</div>
-        <ul>
-            <li>醫生會指示你去 <strong>化驗所 抽血</strong></li>
-            <li>之後等醫生通知返嚟結果</li>
-            <li>結果正常嘅話 <span style="color: green; font-weight: bold;">恭喜你</span></li>
-            <li>如果驗出嚟有 <strong>糖尿病或者高血壓</strong>，會去返你再揀選嘅家庭醫生度覆診，每年有四至六次政府資助嘅額度</li>
-            <li>甚至醫生覺得有需要會轉介你去物理治療師等等（ 亦都有資助 ）</li>
-        </ul>
-    </div>
-
-    <script>
-        function select(btn, type) {
-            // 獲取該按鈕所屬的按鈕組
-            const group = btn.parentElement.querySelectorAll('.btn');
-            
-            // 先清除該組所有按鈕的特定顏色 Class
-            group.forEach(b => {
-                b.classList.remove('btn-yes', 'btn-no', 'btn-unknown');
+        function App() {
+            const [eligibility, setEligibility] = useState({
+                1: '請選擇',
+                2: '請選擇',
+                3: '請選擇',
+                4: '請選擇',
             });
 
-            // 根據選擇加上對應顏色
-            if (type === 'yes') {
-                btn.classList.add('btn-yes');
-            } else if (type === 'no') {
-                btn.classList.add('btn-no');
-            } else if (type === 'unknown') {
-                btn.classList.add('btn-unknown');
-            }
-            // 'default' (請選擇) 不需要額外 class，會變回預設灰色
+            const [participation, setParticipation] = useState('未選擇');
+
+            const questions = [
+                { id: 1, text: '你本身有冇高血壓?' },
+                { id: 2, text: '你本身有冇糖尿病?' },
+                { id: 3, text: '你本身有冇食緊血壓藥?' },
+                { id: 4, text: '你本身有冇食緊糖尿藥?' },
+            ];
+
+            const handleChoice = (id, choice) => {
+                setEligibility(prev => ({ ...prev, [id]: choice }));
+            };
+
+            const getBtnColor = (choice) => {
+                switch (choice) {
+                    case '沒有': return 'bg-green-100 text-green-800 border-green-300';
+                    case '有': return 'bg-red-100 text-red-800 border-red-300';
+                    case '不知道': return 'bg-yellow-100 text-yellow-800 border-yellow-300';
+                    default: return 'bg-gray-100 text-gray-500 border-gray-300';
+                }
+            };
+
+            const hasAnyYes = Object.values(eligibility).some(val => val === '有');
+
+            return (
+                <div className="min-h-screen pb-20">
+                    {/* Header */}
+                    <header className="bg-emerald-600 text-white p-6 shadow-md sticky top-0 z-10">
+                        <div className="max-w-2xl mx-auto flex items-center gap-3">
+                            <HeartIcon size={32} className="fill-white" />
+                            <h1 className="text-3xl font-bold tracking-tight">慢病共治計劃</h1>
+                        </div>
+                    </header>
+
+                    <main className="max-w-2xl mx-auto p-4 space-y-8">
+                        
+                        {/* Introduction Section */}
+                        <section className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
+                            <div className="flex items-start gap-4 mb-4">
+                                <InfoIcon size={32} className="text-emerald-600 shrink-0 mt-1" />
+                                <div>
+                                    <h2 className="text-2xl font-bold text-emerald-800 mb-2">計劃簡介</h2>
+                                    <p className="text-2xl leading-relaxed">
+                                        「慢病共治計劃」<br />
+                                        俗稱三高篩查， 是政府資助計劃<br />
+                                        年滿45歲<br />
+                                        本身冇糖尿病，冇食緊糖尿藥<br />
+                                        本身冇血壓高，冇食緊血壓藥<br />
+                                        的街坊就可以參加<br />
+                                        參加者只需$120 就可以去驗三高 GOGOGO
+                                    </p>
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* Eligibility Check Section */}
+                        <section className="space-y-6">
+                            <h2 className="text-3xl font-bold flex items-center gap-2 px-2">
+                                <ClipboardCheckIcon size={32} className="text-emerald-600 shrink-0" />
+                                資格確認
+                            </h2>
+                            
+                            <div className="space-y-4">
+                                {questions.map((q) => (
+                                    <div key={q.id} className="bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
+                                        <p className="text-2xl font-bold mb-4">{q.text}</p>
+                                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                            {['有', '沒有', '不知道'].map((choice) => (
+                                                <button
+                                                    key={choice}
+                                                    onClick={() => handleChoice(q.id, choice)}
+                                                    className={`text-2xl py-4 px-2 rounded-2xl border-2 transition-all active:scale-95 font-bold ${
+                                                        eligibility[q.id] === choice 
+                                                            ? getBtnColor(choice) 
+                                                            : 'bg-white border-slate-200 text-slate-600 hover:border-emerald-300'
+                                                    }`}
+                                                >
+                                                    {choice}
+                                                </button>
+                                            ))}
+                                        </div>
+                                        {eligibility[q.id] === '請選擇' && (
+                                            <p className="mt-3 text-xl text-slate-400 font-medium text-center italic">請選擇</p>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+
+                        {/* Participation Button */}
+                        <section className="pt-4">
+                            <div className="bg-white rounded-3xl p-8 shadow-md border-2 border-emerald-100 text-center space-y-6">
+                                <h2 className="text-3xl font-bold text-emerald-900">確認參加慢病共治計劃</h2>
+                                <div className="flex flex-col gap-4">
+                                    <button
+                                        onClick={() => setParticipation('我要參加')}
+                                        className={`text-3xl py-6 rounded-3xl font-black transition-all participation-btn border-4 ${
+                                            participation === '我要參加'
+                                                ? 'bg-green-500 text-white border-green-600 shadow-lg'
+                                                : 'bg-gray-100 text-gray-500 border-gray-300 hover:bg-gray-200'
+                                        }`}
+                                    >
+                                        我要參加
+                                    </button>
+                                    <button
+                                        onClick={() => setParticipation('我不要參加')}
+                                        className={`text-3xl py-6 rounded-3xl font-black transition-all participation-btn border-4 ${
+                                            participation === '我不要參加'
+                                                ? 'bg-red-500 text-white border-red-600 shadow-lg'
+                                                : 'bg-gray-100 text-gray-500 border-gray-300 hover:bg-gray-200'
+                                        }`}
+                                    >
+                                        我不要參加
+                                    </button>
+                                </div>
+                            </div>
+                        </section>
+
+                        {/* Flow Sections or Ineligibility Message */}
+                        {participation === '我要參加' && (
+                            hasAnyYes ? (
+                                <div className="bg-red-50 rounded-3xl p-8 shadow-md border-2 border-red-200 text-center space-y-4 animate-in">
+                                    <AlertCircleIcon size={48} className="text-red-600 mx-auto" />
+                                    <h2 className="text-3xl font-bold text-red-900">抱歉，你不符合參加資格</h2>
+                                    <p className="text-2xl text-red-800">
+                                        由於你已患有糖尿病或高血壓，或正在服用相關藥物，因此未能參加此項針對「三高篩查」的資助計劃。
+                                    </p>
+                                </div>
+                            ) : (
+                                <div className="space-y-8 animate-in">
+                                    {/* Today Section */}
+                                    <section className="bg-white rounded-3xl p-6 shadow-sm border-l-8 border-l-emerald-500 border border-slate-200">
+                                        <div className="flex items-center gap-3 mb-4">
+                                            <CalendarIcon size={32} className="text-emerald-600 shrink-0" />
+                                            <h2 className="text-3xl font-bold text-emerald-800">流程：今天</h2>
+                                        </div>
+                                        <ul className="text-2xl space-y-4 list-disc pl-8 font-medium">
+                                            <li>你會揀選一位家庭醫生</li>
+                                            <li>護士會幫你登記入呢個計劃</li>
+                                            <li>會出一張預約醫生便條畀你</li>
+                                        </ul>
+                                    </section>
+
+                                    {/* Upcoming Section */}
+                                    <section className="bg-white rounded-3xl p-6 shadow-sm border-l-8 border-l-blue-500 border border-slate-200">
+                                        <div className="flex items-center gap-3 mb-4">
+                                            <StethoscopeIcon size={32} className="text-blue-600 shrink-0" />
+                                            <h2 className="text-3xl font-bold text-blue-800">嚟緊你要做嘅</h2>
+                                        </div>
+                                        <ul className="text-2xl space-y-4 font-medium">
+                                            <li className="flex gap-2">
+                                                <span className="text-blue-500">•</span>
+                                                <span>打電話去預約見醫生 <br/><span className="text-xl text-slate-500">（ 如果遇到困難，可以搵返我地中心 ）</span></span>
+                                            </li>
+                                            <li className="flex gap-2">
+                                                <span className="text-blue-500">•</span>
+                                                <span>醫生地址同電話係第二頁</span>
+                                            </li>
+                                            <li className="flex gap-2">
+                                                <span className="text-blue-500">•</span>
+                                                <span>留意返 預約便條 有效日期為1年半</span>
+                                            </li>
+                                            <li className="flex gap-2">
+                                                <span className="text-blue-500">•</span>
+                                                <span>見醫生當日唔使空肚</span>
+                                            </li>
+                                            <li className="flex gap-2">
+                                                <span className="text-blue-500">•</span>
+                                                <div className="space-y-2">
+                                                    <span>見醫生前的七日， 自行喺屋企量血壓，建議每日2次。</span>
+                                                    <div className="bg-blue-50 p-4 rounded-2xl border border-blue-100 text-xl">
+                                                        <p className="font-bold text-blue-800">正常血壓：</p>
+                                                        <p>上壓 90-120 mmHg</p>
+                                                        <p>下壓 60-80 mmHG</p>
+                                                        <p>脈搏: 60-100 bpm</p>
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <li className="flex gap-3 bg-red-50 p-4 rounded-2xl border border-red-100">
+                                                <AlertCircleIcon size={32} className="text-red-600 shrink-0" />
+                                                <span className="text-red-800 font-bold">
+                                                    如果超出呢個範圍， 建議休息15分鐘再量度。 如果感到不適， 或者血壓高好多(如上壓 170，或者低好多)， 建議即刻去睇醫生
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    </section>
+
+                                    {/* After Doctor Section */}
+                                    <section className="bg-white rounded-3xl p-6 shadow-sm border-l-8 border-l-purple-500 border border-slate-200">
+                                        <div className="flex items-center gap-3 mb-4">
+                                            <CheckCircle2Icon size={32} className="text-purple-600 shrink-0" />
+                                            <h2 className="text-3xl font-bold text-purple-800">見完醫生之後</h2>
+                                        </div>
+                                        <ul className="text-2xl space-y-4 list-disc pl-8 font-medium">
+                                            <li>醫生會指示你去 化驗所 抽血</li>
+                                            <li>之後等醫生通知返嚟結果</li>
+                                            <li className="text-emerald-700 font-bold">結果正常嘅話 恭喜你</li>
+                                            <li>如果驗出嚟有 糖尿病或者高血壓， 會去返你再揀選嘅家庭醫生度覆診， 每年有四至六次政府資助嘅額度</li>
+                                            <li>甚至醫生覺得有需要會轉介你去物理治療師等等（ 亦都有資助 ）</li>
+                                        </ul>
+                                    </section>
+                                </div>
+                            )
+                        )}
+
+                        {/* Footer Note */}
+                        <footer className="text-center text-slate-400 py-8 text-lg">
+                            <p>© RN Matthew Cheng 慢病共治計劃助手</p>
+                        </footer>
+                    </main>
+                </div>
+            );
         }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
     </script>
 </body>
 </html>
+
