@@ -3,233 +3,250 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CDCC 慢病共治計劃助手</title>
+    <title>慢病共治計劃 登記小幫手</title>
     <style>
         :root {
             --grey: #e0e0e0;
-            --light-green: #90ee90;
-            --red: #ffcccb;
-            --yellow: #ffff99;
-            --text-dark: #333;
+            --light-green: #90EE90;
+            --red: #FF6B6B;
+            --yellow: #FFFFE0;
+            --dark-grey: #666;
         }
 
         body {
             font-family: "Microsoft JhengHei", "Heiti TC", sans-serif;
             line-height: 1.6;
-            color: var(--text-dark);
+            color: #333;
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
             background-color: #f9f9f9;
-            font-size: 22px; /* Large base font */
+            font-size: 24px; /* 大字體設置 */
         }
 
-        .header-box {
-            background: #fff;
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            font-size: 42px;
+            border-bottom: 5px solid #2c3e50;
+            padding-bottom: 10px;
+        }
+
+        .intro-box {
+            background-color: #fff;
             padding: 20px;
             border-radius: 15px;
-            border-left: 10px solid #2e7d32;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border: 2px solid #ddd;
             margin-bottom: 30px;
         }
 
-        h1, h2 {
-            color: #2e7d32;
-            font-size: 28px;
-        }
-
         .question-card {
-            background: white;
+            background-color: #fff;
             padding: 20px;
             margin-bottom: 20px;
-            border-radius: 12px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .question-text {
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: block;
         }
 
         .button-group {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(2, 1fr);
             gap: 10px;
-            margin-top: 15px;
         }
 
-        button {
-            padding: 15px;
-            font-size: 24px;
-            font-weight: bold;
+        .btn {
+            padding: 15px 10px;
+            font-size: 22px;
             border: 2px solid #ccc;
             border-radius: 10px;
             cursor: pointer;
-            transition: 0.3s;
             background-color: var(--grey);
+            transition: all 0.3s;
         }
 
-        /* Logic Colors */
-        button.selected-none { background-color: var(--grey); border-color: #999; }
-        button.selected-yes { background-color: var(--red); border-color: #d32f2f; }
-        button.selected-no { background-color: var(--light-green); border-color: #388e3c; }
-        button.selected-unknown { background-color: var(--yellow); border-color: #fbc02d; }
+        /* 按鈕顏色狀態 */
+        .btn-none { background-color: var(--grey); color: #333; }
+        .btn-yes { background-color: var(--red) !important; color: white; border-color: #c0392b; }
+        .btn-no { background-color: var(--light-green) !important; color: #000; border-color: #27ae60; }
+        .btn-unknown { background-color: #ffeb3b !important; color: #000; border-color: #f1c40f; }
 
         .confirm-section {
-            margin-top: 40px;
-            padding: 30px;
-            background: #fff;
-            border: 4px dashed #2e7d32;
-            border-radius: 20px;
             text-align: center;
+            margin: 40px 0;
+            padding: 30px;
+            border-top: 3px dashed #ccc;
         }
+
+        .participation-btn {
+            width: 100%;
+            padding: 25px;
+            font-size: 32px;
+            font-weight: bold;
+            margin: 10px 0;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-join { background-color: var(--light-green); border: 4px solid #27ae60; }
+        .btn-not-join { background-color: var(--red); color: white; border: 4px solid #c0392b; }
 
         .info-section {
-            margin-top: 40px;
-            background: white;
-            padding: 25px;
+            background-color: #fff;
+            padding: 20px;
             border-radius: 15px;
+            margin-top: 20px;
         }
 
-        .info-card {
-            border-bottom: 2px solid #eee;
-            padding: 15px 0;
-        }
-
-        .highlight-box {
-            background: #fff9c4;
-            padding: 15px;
+        .info-title {
+            background-color: #2c3e50;
+            color: white;
+            padding: 10px 20px;
             border-radius: 10px;
-            font-weight: bold;
-            border: 1px solid #fbc02d;
+            display: inline-block;
+            margin-bottom: 15px;
         }
 
-        .vital-signs {
-            background: #e3f2fd;
+        .highlight-red { color: #e74c3c; font-weight: bold; }
+        .highlight-blue { color: #3498db; font-weight: bold; }
+
+        ul { padding-left: 25px; }
+        li { margin-bottom: 15px; }
+
+        .blood-pressure-box {
+            background-color: #f0f7ff;
+            border-left: 8px solid #3498db;
             padding: 15px;
-            border-radius: 10px;
             margin: 10px 0;
-            border-left: 5px solid #2196f3;
-        }
-
-        @media (max-width: 600px) {
-            button { font-size: 20px; padding: 12px; }
-            body { font-size: 18px; }
+            font-size: 22px;
         }
     </style>
 </head>
 <body>
 
-    <div class="header-box">
-        <p><strong>慢病共治計劃，</strong></p>
-        <p>即係三高篩查，是政府資助計劃。</p>
-        <p>俾年滿45歲，本身冇糖尿病，冇食緊糖尿藥，冇血壓高，冇食緊血壓藥，的街坊參加。</p>
+    <h1>「慢病共治計劃」</h1>
+
+    <div class="intro-box">
+        即係<strong>三高篩查</strong>，是政府資助計劃。<br>
+        俾年滿45歲，本身冇糖尿病，冇食緊糖尿藥，冇血壓高，冇食緊血壓藥，的街坊參加。
     </div>
 
-    <div id="eligibility-questions">
+    <!-- 資格確認部分 -->
+    <div id="eligibility">
         <div class="question-card">
-            <p>你本身有冇高血壓?</p>
+            <span class="question-text">1. 你本身有冇高血壓?</span>
             <div class="button-group">
-                <button onclick="updateBtn(this, 'yes')">有</button>
-                <button onclick="updateBtn(this, 'no')">沒有</button>
-                <button onclick="updateBtn(this, 'unknown')">不知道</button>
-                <button onclick="updateBtn(this, 'none')">請選擇</button>
+                <button class="btn" onclick="select(this, 'yes')">有</button>
+                <button class="btn" onclick="select(this, 'no')">沒有</button>
+                <button class="btn" onclick="select(this, 'unknown')">不知道</button>
+                <button class="btn btn-none" onclick="select(this, 'default')">請選擇</button>
             </div>
         </div>
 
         <div class="question-card">
-            <p>你本身有冇糖尿病?</p>
+            <span class="question-text">2. 你本身有冇糖尿病?</span>
             <div class="button-group">
-                <button onclick="updateBtn(this, 'yes')">有</button>
-                <button onclick="updateBtn(this, 'no')">沒有</button>
-                <button onclick="updateBtn(this, 'unknown')">不知道</button>
-                <button onclick="updateBtn(this, 'none')">請選擇</button>
+                <button class="btn" onclick="select(this, 'yes')">有</button>
+                <button class="btn" onclick="select(this, 'no')">沒有</button>
+                <button class="btn" onclick="select(this, 'unknown')">不知道</button>
+                <button class="btn btn-none" onclick="select(this, 'default')">請選擇</button>
             </div>
         </div>
 
         <div class="question-card">
-            <p>你本身有冇食緊血壓藥?</p>
+            <span class="question-text">3. 你本身有冇食緊血壓藥?</span>
             <div class="button-group">
-                <button onclick="updateBtn(this, 'yes')">有</button>
-                <button onclick="updateBtn(this, 'no')">沒有</button>
-                <button onclick="updateBtn(this, 'unknown')">不知道</button>
-                <button onclick="updateBtn(this, 'none')">請選擇</button>
+                <button class="btn" onclick="select(this, 'yes')">有</button>
+                <button class="btn" onclick="select(this, 'no')">沒有</button>
+                <button class="btn" onclick="select(this, 'unknown')">不知道</button>
+                <button class="btn btn-none" onclick="select(this, 'default')">請選擇</button>
             </div>
         </div>
 
         <div class="question-card">
-            <p>你本身有冇食緊糖尿藥?</p>
+            <span class="question-text">4. 你本身有冇食緊糖尿藥?</span>
             <div class="button-group">
-                <button onclick="updateBtn(this, 'yes')">有</button>
-                <button onclick="updateBtn(this, 'no')">沒有</button>
-                <button onclick="updateBtn(this, 'unknown')">不知道</button>
-                <button onclick="updateBtn(this, 'none')">請選擇</button>
+                <button class="btn" onclick="select(this, 'yes')">有</button>
+                <button class="btn" onclick="select(this, 'no')">沒有</button>
+                <button class="btn" onclick="select(this, 'unknown')">不知道</button>
+                <button class="btn btn-none" onclick="select(this, 'default')">請選擇</button>
             </div>
         </div>
     </div>
 
+    <!-- 參加確認按鈕 -->
     <div class="confirm-section">
-        <h2>確認參加慢病共治計劃</h2>
-        <div class="button-group">
-            <button onclick="updateBtn(this, 'no')" style="background-color: var(--light-green);">我要參加</button>
-            <button onclick="updateBtn(this, 'yes')" style="background-color: var(--red);">我不要參加</button>
+        <div style="margin-bottom: 20px; font-weight: bold; font-size: 32px;">確認參加慢病共治計劃</div>
+        <button class="participation-btn btn-join">我要參加</button>
+        <button class="participation-btn btn-not-join">我不要參加</button>
+    </div>
+
+    <!-- 流程說明 -->
+    <div class="info-section">
+        <div class="info-title">流程 今天</div>
+        <ul>
+            <li>你會揀選一位家庭醫生</li>
+            <li>護士會幫你登記入呢個計劃</li>
+            <li>會出一張預約醫生便條畀你</li>
+        </ul>
+    </div>
+
+    <div class="info-section">
+        <div class="info-title">嚟緊你要做嘅</div>
+        <ul>
+            <li><span class="highlight-red">打電話去預約見醫生</span>（ 如果遇到困難，可以搵返我地中心 ）</li>
+            <li>醫生地址同電話係第二頁</li>
+            <li>留意返 <span class="highlight-blue">預約便條 有效日期為1年半</span></li>
+            <li>見醫生當日<span class="highlight-red">唔使空肚</span></li>
+            <li>見醫生前的七日，自行喺屋企量血壓，建議每日2次。</li>
+        </ul>
+        
+        <div class="blood-pressure-box">
+            <strong>正常血壓：</strong><br>
+            上壓 90-120 mmHg<br>
+            下壓 60-80 mmHg<br>
+            脈搏: 60-100 bpm<br><br>
+            <small>※ 如果超出呢個範圍，建議休息15分鐘再量度。如果感到不適，或者血壓高好多(如上壓 170，或者低好多)，建議即刻去睇醫生</small>
         </div>
     </div>
 
     <div class="info-section">
-        <div class="info-card">
-            <h2>📅 今天</h2>
-            <ul>
-                <li>你會揀選一位家庭醫生</li>
-                <li>護士會幫你登記入呢個計劃</li>
-                <li>會出一張預約醫生便條畀你</li>
-            </ul>
-        </div>
-
-        <div class="info-card">
-            <h2>📞 嚟緊你要做嘅</h2>
-            <ul>
-                <li>打電話去預約見醫生 （ 如果遇到困難，可以搵返我地中心 ）</li>
-                <li>醫生地址同電話係第二頁</li>
-                <li><strong>留意返：</strong> 預約便條 有效日期為1年半</li>
-                <li>見醫生當日唔使空肚</li>
-                <li>見醫生前的七日，自行喺屋企量血壓，建議每日2次。</li>
-            </ul>
-            <div class="vital-signs">
-                <strong>正常血壓範圍：</strong><br>
-                上壓：90-120 mmHg<br>
-                下壓：60-80 mmHg<br>
-                脈搏：60-100 bpm
-            </div>
-            <div class="highlight-box">
-                ⚠️ 如果超出呢個範圍，建議休息15分鐘再量度。如果感到不適，或者血壓高好多(如上壓 170，或者低好多)，建議即刻去睇醫生。
-            </div>
-        </div>
-
-        <div class="info-card">
-            <h2>🩺 見完醫生之後</h2>
-            <ul>
-                <li>醫生會指示你去 化驗所 抽血</li>
-                <li>之後等醫生通知返嚟結果</li>
-                <li>結果正常嘅話 <strong>恭喜你！</strong></li>
-                <li>如果驗出嚟有 糖尿病或者高血壓，會去返你再揀選嘅家庭醫生度覆診，每年有四至六次政府資助嘅額度</li>
-                <li>甚至醫生覺得有需要會轉介你去物理治療師等等（亦都有資助）</li>
-            </ul>
-        </div>
+        <div class="info-title">見完醫生之後</div>
+        <ul>
+            <li>醫生會指示你去 <strong>化驗所 抽血</strong></li>
+            <li>之後等醫生通知返嚟結果</li>
+            <li>結果正常嘅話 <span style="color: green; font-weight: bold;">恭喜你</span></li>
+            <li>如果驗出嚟有 <strong>糖尿病或者高血壓</strong>，會去返你再揀選嘅家庭醫生度覆診，每年有四至六次政府資助嘅額度</li>
+            <li>甚至醫生覺得有需要會轉介你去物理治療師等等（ 亦都有資助 ）</li>
+        </ul>
     </div>
 
     <script>
-        function updateBtn(btn, status) {
-            // Find all buttons in the same group and reset them
-            const parent = btn.parentElement;
-            const buttons = parent.querySelectorAll('button');
-            buttons.forEach(b => {
-                b.classList.remove('selected-yes', 'selected-no', 'selected-unknown', 'selected-none');
-                b.style.backgroundColor = ''; // Reset inline styles if any
+        function select(btn, type) {
+            // 獲取該按鈕所屬的按鈕組
+            const group = btn.parentElement.querySelectorAll('.btn');
+            
+            // 先清除該組所有按鈕的特定顏色 Class
+            group.forEach(b => {
+                b.classList.remove('btn-yes', 'btn-no', 'btn-unknown');
             });
 
-            // Apply specific class based on status
-            if (status === 'yes') btn.classList.add('selected-yes');
-            else if (status === 'no') btn.classList.add('selected-no');
-            else if (status === 'unknown') btn.classList.add('selected-unknown');
-            else btn.classList.add('selected-none');
+            // 根據選擇加上對應顏色
+            if (type === 'yes') {
+                btn.classList.add('btn-yes');
+            } else if (type === 'no') {
+                btn.classList.add('btn-no');
+            } else if (type === 'unknown') {
+                btn.classList.add('btn-unknown');
+            }
+            // 'default' (請選擇) 不需要額外 class，會變回預設灰色
         }
     </script>
-
 </body>
 </html>
